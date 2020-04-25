@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mero_kharcha/models/constants.dart';
 
 class ChartBar extends StatelessWidget {
   final String label;
@@ -19,7 +20,7 @@ class ChartBar extends StatelessWidget {
           child: FittedBox(
             child: Text(
               '\$${spentAmount.toStringAsFixed(0)}',
-              style: Theme.of(context).textTheme.headline6,
+              style: kChartTextStyle,
             ),
           ),
         ),
@@ -33,8 +34,8 @@ class ChartBar extends StatelessWidget {
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 1.0),
-                  color: Color(0xffe2dcdc),
+                  border: Border.all(color: Colors.grey, width: 1),
+                  color: kChartBarBorderColor,
                   borderRadius: BorderRadius.circular(20.0),
                 ),
               ),
@@ -42,7 +43,7 @@ class ChartBar extends StatelessWidget {
                 heightFactor: spentPct,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColorDark,
+                    color: kChartBarColor,
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
@@ -55,7 +56,7 @@ class ChartBar extends StatelessWidget {
         ),
         Text(
           label,
-          style: Theme.of(context).textTheme.headline6,
+          style: kChartTextStyle,
         ),
       ],
     );

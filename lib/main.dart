@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mero_kharcha/models/constants.dart';
 import './widgets/chart.dart';
 import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
@@ -13,25 +14,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Mero Kharcha',
       theme: ThemeData(
-          primarySwatch: Colors.purple,
+          primarySwatch: kPrimarySwatchColor,
+          primaryColor: kPrimaryColor,
           fontFamily: 'QuickSand',
-          accentColor: Colors.purpleAccent,
-          textTheme: ThemeData.light().textTheme.copyWith(
-              headline6: TextStyle(
-                  fontFamily: 'Quicksand',
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
-              button: TextStyle(
-                  fontFamily: 'Quicksand',
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold)),
-          appBarTheme: AppBarTheme(
-              textTheme: ThemeData.light().textTheme.copyWith(
-                      headline6: TextStyle(
-                    fontFamily: 'OpenSans',
-                    fontSize: 20,
-                  )))),
+          accentColor: kAccentColor),
       home: MyHomePage(),
     );
   }
@@ -55,16 +41,28 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(String txTitle, double txAmount) {
+  void _addNewTransaction(
+      String txTitle, double txAmount, DateTime pickedDate) {
     final newTx = Transaction(
       title: txTitle,
       amount: txAmount,
-      date: DateTime.now(),
+      date: pickedDate,
       id: DateTime.now().toString(),
     );
 
     setState(() {
       _userTransactions.add(newTx);
+      _userTransactions.sort((a, b) {
+        var aDate = a.date;
+        var bDate = b.date;
+        return bDate.compareTo(aDate);
+      });
+    });
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((tx) => tx.id == id);
     });
   }
 
@@ -85,12 +83,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.purple,
+        backgroundColor: kAppbarBgColor,
         title: Text(
           'Mero Kharcha',
-          style: TextStyle(
-            fontFamily: 'Open Sans',
-          ),
+          style: kAppBarTextStyle,
         ),
         actions: <Widget>[
           IconButton(
@@ -101,17 +97,16 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Chart(_recentTransactions),
-            TransactionList(_userTransactions),
+            TransactionList(_userTransactions, _deleteTransaction),
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.purple,
+        backgroundColor: kFloatingActionBgColor,
         child: Icon(Icons.add),
         onPressed: () => _startAddNewTransaction(context),
       ),
